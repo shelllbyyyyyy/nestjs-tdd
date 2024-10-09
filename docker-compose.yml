@@ -1,0 +1,41 @@
+services:
+  postgres-tdd:
+    image: postgres:13
+    container_name: postgres-tdd
+    ports:
+      - '9999:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tdd
+    volumes:
+      - data_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+    networks:
+      - tdd
+
+  redis:
+    image: 'redis:alpine'
+    container_name: redis-tdd
+    ports:
+      - '6378:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+    restart: always
+    networks:
+      - tdd
+
+volumes:
+  data_postgres:
+networks:
+  tdd:
+    driver: bridge
