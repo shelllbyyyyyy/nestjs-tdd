@@ -39,8 +39,8 @@ services:
     container_name: nest-app
     build:
       context: .
-      dockerfile: Dockerfile
-      target: production
+      dockerfile: Dockerfile.dev
+      target: development
     depends_on:
       postgres-tdd:
         condition: service_healthy

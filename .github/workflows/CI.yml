@@ -53,7 +53,7 @@ jobs:
 
       - name: Build and start the containers
         run: |
-          docker-compose -f docker-compose.yml up -d --build
+          docker-compose -f dev-docker-compose.yml up -d --build
 
       - name: Wait for the application to be ready
         run: |
@@ -62,18 +62,11 @@ jobs:
             sleep 3
           done
 
-      - name: Get PostgreSQL container ID
-        id: postgres_container_id
-        run: echo "::set-output name=POSTGRES_CONTAINER_ID::$(docker-compose ps -q postgres-tdd)"
-
-      - name: Initialize PostgreSQL with SQL script
-        run: docker exec ${{ steps.postgres_container_id.outputs.POSTGRES_CONTAINER_ID }} psql -U postgres -d tdd -f /script/init.sql
-
       - name: Run integration tests
-        run: docker-compose -f docker-compose.yml exec app npm run test:e2e
+        run: docker exec nest-app npm run test:e2e
 
       - name: Shut down Docker containers
-        run: docker-compose -f docker-compose.yml down
+        run: docker-compose -f dev-docker-compose.yml down
 
       - name: Upload build artifacts
         if: success()
