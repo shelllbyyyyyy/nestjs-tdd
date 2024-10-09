@@ -34,6 +34,21 @@ services:
     networks:
       - tdd
 
+  nest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    depends_on:
+      postgres-tdd:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env.production
+    networks:
+      - tdd
+
 volumes:
   data_postgres:
 networks:
