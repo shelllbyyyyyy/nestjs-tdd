@@ -67,7 +67,7 @@ jobs:
         run: echo "::set-output name=POSTGRES_CONTAINER_ID::$(docker-compose ps -q postgres)"
 
       - name: Initialize PostgreSQL with SQL script
-        run: docker exec ${{ steps.postgres_container_id.outputs.POSTGRES_CONTAINER_ID }} psql -U user -d tdd -f /script/init.sql
+        run: docker exec ${{ steps.postgres_container_id.outputs.POSTGRES_CONTAINER_ID }} postgress-tdd -U user -d tdd -f /script/init.sql
 
       - name: Run integration tests
         run: docker-compose -f docker-compose.yml exec app npm run test:e2e
